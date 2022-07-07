@@ -1,0 +1,59 @@
+specVersion: "1.0.0"
+
+name: "avalanche-subql-starter"
+version: "0.0.1"
+runner:
+  node:
+    name: "@subql/node-avalanche"
+    version: "*"
+  query:
+    name: "@subql/query"
+    version: "*"
+description: "This project can be use as a starting point for developing your new Avalanche SubQuery project"
+repository: "https://github.com/subquery/avalanche-subql-starter"
+
+schema:
+  file: "./schema.graphql"
+
+network:
+  endpoint: "http://avalanche.api.onfinality.io"
+  chainId: "mainnet"
+  subnet: "C"
+
+dataSources:
+  - kind: avalanche/Runtime
+    startBlock: 5888150
+    options:
+      abi: Expedition
+      address: "0x31DcbBc450DEAe74E73dF8988F5a8AdbE6dBaC93"
+    assets:
+      Expedition:
+        file: "./abis/Expedition.json"
+    mapping:
+      file: "./dist/index.js"
+      handlers:
+        - handler: handleParticipate
+          kind: avalanche/LogHandler
+          filter:
+            topics:
+              - Participate(address _sender,uint256 _id,bool _isMaker ,uint256 _points ,uint256[] _tokenIds)
+        - handler: handleFinishCampaign
+          kind: avalanche/LogHandler
+          filter:
+            topics:
+              - FinishCampaign(address,address,address,uint256,uint256,uint256)
+        - handler: handleUnlockAttackNFTs
+          kind: avalanche/LogHandler
+          filter:
+            topics:
+              - UnlockAttackNFTs(address,uint256)
+        - handler: handleReinforceAttack
+          kind: avalanche/LogHandler
+          filter:
+            topics:
+              - ReinforceAttack(address,uint256,uint256,uint256)
+        - handler: handleReinforceDefense
+          kind: avalanche/LogHandler
+          filter:
+            topics:
+              - ReinforceDefense(address,uint256,uint256,uint256)

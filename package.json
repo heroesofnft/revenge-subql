@@ -2,7 +2,7 @@
   "name": "revenge-subql",
   "version": "1.0.0",
   "description": "Heroes of Nft Revenge Subquery Indexing Schemas",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/heroesofnft/revenge-subql.git",
   "author": "defikintaro",
   "license": "GPL-3.0",

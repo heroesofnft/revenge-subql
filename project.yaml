@@ -17,7 +17,7 @@ schema:
 
 network:
   endpoint: "https://herotestnet.heroesofnft.com"
-  chainId: "17771"
+  chainId: "fuji"
   subnet: "2kdzD7eps9QRC449zypVGBbrzkwFrefLzmt24tS8MxmvEBuWvP"
 
 dataSources:

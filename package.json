@@ -7,7 +7,7 @@
   "author": "defikintaro",
   "license": "GPL-3.0",
   "scripts": {
-    "build": "tsc -b",
+    "build": "subql build",
     "prepack": "rm -rf dist && npm build",
     "test": "jest",
     "codegen": "./node_modules/.bin/subql codegen && yarn codegen:contracts",

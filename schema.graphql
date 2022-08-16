@@ -1,7 +1,7 @@
 type Campaign @entity {
   id: ID!
-  campaigner: String! # address
-  ambusher: String! # address
+  campaigner: String # address
+  ambusher: String # address
   isClaimedCampaigner: Boolean!
   isClaimedAmbusher: Boolean!
   rewardHonCampaigner: BigInt!
@@ -13,8 +13,8 @@ type Campaign @entity {
   totalAttack: BigInt!
   totalDefense: BigInt!
   startTimestamp: BigInt!
-  reinforceTimestamps: [BigInt!]!
-  tokens: [HeroCampaign!]! @derivedFrom(field: "campaign")
+  reinforceTimestamps: [BigInt]!
+  tokens: [HeroCampaign]! @derivedFrom(field: "campaign")
 }
 
 type Hero @entity {

@@ -40,16 +40,23 @@ export async function handleParticipate(event: AvalancheLog<ParticipateEvent['ar
 
   if (!campaign) {
     campaign = new Campaign(event.args._id.toHexString());
+    campaign.rewardHonAmbusher = BigInt(0);
+    campaign.rewardHrmAmbusher = BigInt(0);
+    campaign.rewardHonCampaigner = BigInt(0);
+    campaign.rewardHrmCampaigner = BigInt(0);
+    campaign.totalAttack = BigInt(0);
+    campaign.totalDefense = BigInt(0);
+    campaign.isClaimedAmbusher = false;
+    campaign.isClaimedCampaigner = false;
   }
 
   const expedition = Expedition__factory.connect(event.address, api);
 
-  let _reinforceTimestamps = campaign.reinforceTimestamps;
+  let _reinforceTimestamps = campaign.reinforceTimestamps ?? [];
 
   // Get all the tokens
   const tokens = event.args._tokenIds;
-  for (let i = 0; i < tokens.length; i++) {
-    const tokenId = tokens[i];
+  const heroCampaigns = await Promise.all(tokens.map(async tokenId => {
     const hero = await createHero(tokenId, expedition);
 
     const heroCampaign = HeroCampaign.create({
@@ -60,11 +67,11 @@ export async function handleParticipate(event: AvalancheLog<ParticipateEvent['ar
       isAmbusher: !event.args._isMaker,
     })
 
-    await heroCampaign.save();
-
     // Set campaign timestamps for each token
     _reinforceTimestamps.push(event.block.timestamp);
-  }
+
+    return heroCampaign;
+  }));
 
   // Note: In the time event fired tier & area have already values so it's safe to retrieve here
   // Get campaign details from blockchain
@@ -79,7 +86,7 @@ export async function handleParticipate(event: AvalancheLog<ParticipateEvent['ar
   if (event.args._isMaker) {
     campaign.campaigner = event.args._sender;
     // set total defense
-    campaign.totalDefense =event.args._points.toBigInt();
+    campaign.totalDefense = event.args._points.toBigInt();
 
     // add timestamp
     campaign.startTimestamp = BigInt(event.block.timestamp.toString());
@@ -89,9 +96,9 @@ export async function handleParticipate(event: AvalancheLog<ParticipateEvent['ar
     campaign.totalAttack = event.args._points.toBigInt();
   }
 
-
   campaign.reinforceTimestamps = _reinforceTimestamps;
   await campaign.save();
+  await store.bulkCreate('HeroCampaign', heroCampaigns);
 }
 
 export async function handleFinishCampaign(event: AvalancheLog<FinishCampaignEvent['args']>): Promise<void> {

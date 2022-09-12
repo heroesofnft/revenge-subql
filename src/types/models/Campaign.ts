@@ -16,9 +16,9 @@ export class Campaign implements Entity {
 
     public id: string;
 
-    public campaigner: string;
+    public campaigner?: string;
 
-    public ambusher: string;
+    public ambusher?: string;
 
     public isClaimedCampaigner: boolean;
 

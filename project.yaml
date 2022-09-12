@@ -22,7 +22,7 @@ network:
 
 dataSources:
   - kind: avalanche/Runtime
-    startBlock: 13785
+    startBlock: 1
     options:
       abi: Expedition
       address: "0x31DcbBc450DEAe74E73dF8988F5a8AdbE6dBaC93"
